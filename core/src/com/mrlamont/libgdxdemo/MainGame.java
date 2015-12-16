@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mrlamont.Model.Block;
 import com.mrlamont.Model.Mario;
 import com.mrlamont.Model.World;
 import com.mrlamont.Screens.WorldRenderer;
@@ -47,7 +48,55 @@ public class MainGame implements Screen {
             player.setVelocityX(-2f);
         }
         
+        if(Gdx.input.isKeyPressed(Keys.SPACE)){
+            player.jump();
+        }
+        
         player.update(deltaTime);
+        
+        //collisions
+        // go through each block
+        for(Block b: theWorld.getBlocks()){
+            // if player is hitting a block
+            if(player.isColliding(b)){
+                // get overlapping amount
+                float overX = player.getOverlapX(b);
+                float overY = player.getOverlapY(b);
+                
+                //just fixing y if not moving
+                if(player.getVelocityX() == 0){
+                    // player is above the block
+                    if(player.getY() > b.getY()){
+                        player.addToPosition(0, overY);
+                        player.setState(Mario.State.STANDING);
+                    }else{
+                        player.addToPosition(0, -overY);
+                    }
+                    player.setVelocityY(0);
+                }else{
+                    // fix the smallest overlap
+                    if(overX < overY){
+                        // left of the block
+                        if(player.getX() < b.getX()){
+                            player.addToPosition(-overX, 0);
+                        }else{
+                            player.addToPosition(overX, 0);
+                        }
+                    } else {
+                        // above the block
+                        if(player.getY() > b.getY()){
+                            player.addToPosition(0, overY);
+                            if(player.getState() == Mario.State.JUMPING){
+                                player.setState(Mario.State.STANDING);
+                            }
+                        }else{
+                            player.addToPosition(0, -overY);
+                        }
+                        player.setVelocityY(0);
+                    }
+                }
+            }
+        }
         // draw the screen
         renderer.render(deltaTime);
     }

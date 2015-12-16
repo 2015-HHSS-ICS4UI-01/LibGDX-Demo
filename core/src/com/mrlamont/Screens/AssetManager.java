@@ -20,13 +20,14 @@ public class AssetManager {
     public static TextureRegion block;
     public static TextureRegion marioStand;
     public static TextureRegion marioStandL;
+    public static TextureRegion marioJump;
     public static Animation marioRun;
     public static Animation marioRunL;
     
     public static void load(){
         atlas = new TextureAtlas("mario.pack");
         block = atlas.findRegion("stoneBlock");
-        
+        marioJump = atlas.findRegion("jump");
         marioStand = atlas.findRegion("stand");
         marioStandL = new TextureRegion(marioStand);
         marioStandL.flip(true, false);

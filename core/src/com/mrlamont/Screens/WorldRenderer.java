@@ -57,6 +57,7 @@ public class WorldRenderer {
         
         
         // update the camera
+        camera.position.x = Math.max(player.getX(), V_WIDTH/2);
         camera.update();
         
         // links the renderer to the camera
@@ -70,7 +71,22 @@ public class WorldRenderer {
             batch.draw(AssetManager.block, b.getX(), b.getY());
         }
         // draw mario
-        batch.draw(AssetManager.marioStand, player.getX(), player.getY());
+        if(player.getState() == Mario.State.STANDING){
+            if(player.isFacingLeft()){
+                batch.draw(AssetManager.marioStandL, player.getX(), player.getY());
+            }else{
+                batch.draw(AssetManager.marioStand, player.getX(), player.getY());
+            }
+        }else if(player.getState() == Mario.State.RUNNING){
+            if(player.isFacingLeft()){
+                batch.draw(AssetManager.marioRunL.getKeyFrame(player.getStateTime(), true), player.getX(), player.getY());
+            }else{
+                batch.draw(AssetManager.marioRun.getKeyFrame(player.getStateTime(), true), player.getX(), player.getY());
+            }
+        }else if(player.getState() == Mario.State.JUMPING){
+            batch.draw(AssetManager.marioJump, player.getX(), player.getY());
+        }
+        
         // finished listing things to draw
         batch.end();
     }

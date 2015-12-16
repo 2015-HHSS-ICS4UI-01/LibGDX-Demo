@@ -49,10 +49,34 @@ public class Mario extends Entity{
             velocity.x = 0;
         }
         addToPosition(velocity.x,velocity.y);
+        
+        // moving to the left
+        if(velocity.x < 0){
+            isFacingLeft = true;
+            if(state != State.RUNNING && state != State.JUMPING){
+                stateTime = 0;
+                state = State.RUNNING;
+            }
+        }else if(velocity.x > 0){
+            isFacingLeft = false;
+            if(state != State.RUNNING && state != State.JUMPING){
+                stateTime = 0;
+                state = State.RUNNING;
+            }
+        }else{
+            state = State.STANDING;
+            stateTime = 0;
+        }
+        
+        stateTime += delta;
     }
     
     public void jump(){
-        
+        if(state != State.JUMPING && velocity.y == 0){
+            velocity.y = Y_MAX_VEL;
+            state = State.JUMPING;
+            stateTime = 0;
+        }
     }
     
     public void setVelocityX(float x){
